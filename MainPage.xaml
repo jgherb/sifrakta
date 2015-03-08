@@ -1,0 +1,49 @@
+<Page
+    x:Class="SiFrakta.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SiFrakta"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="Black">
+        <Button x:Name="SierpinskiButton" Content="Sierpinski 3" HorizontalAlignment="Left" Height="68" Margin="498,26,0,0" VerticalAlignment="Top" Width="200" Background="Azure" Foreground="#FF020202" FontSize="30" Click="Button_Click"/>
+        <Viewbox Width="1000" Height="600"
+                 x:Name="ImgContainer" Margin="292,143,74,25" PointerReleased="Image_PointerReleased">
+            <Image x:Name="Img1" />
+        </Viewbox>
+        <Button x:Name="MandelbrotButton" Content="Mandelbrot" HorizontalAlignment="Left" Height="68" Margin="708,26,0,0" VerticalAlignment="Top" Width="200" Background="AliceBlue" Foreground="#FF020202" FontSize="30" Click="MandelbrotButton_Click"/>
+        <TextBlock HorizontalAlignment="Left" Height="39" Margin="10,719,0,0" TextWrapping="Wrap" Text="Julius Herb" VerticalAlignment="Top" Width="261" FontSize="36" TextAlignment="Center" FontFamily="Adobe Caslon Pro"/>
+        <Grid Margin="10,82,1100,632">
+            <Slider x:Name="SliderVT" HorizontalAlignment="Left" Height="40" Margin="-1,23,0,-9" VerticalAlignment="Top" Width="257" Maximum="100000" ValueChanged="SliderVT_ValueChanged" LargeChange="100" IsThumbToolTipEnabled="False" Foreground="Lime" Value="30000" />
+            <TextBlock HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" Text="Versuchstiefe" VerticalAlignment="Top" Width="175" FontSize="24" Margin="0,5,0,0"/>
+            <TextBlock HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" Text="Render automatically" VerticalAlignment="Top" Width="228" FontSize="24" Margin="0,152,0,-128"/>
+            <Slider x:Name="FarbeDelta" HorizontalAlignment="Left" Height="40" Margin="-1,118,0,-104" VerticalAlignment="Top" Width="257" Maximum="255" ValueChanged="FarbeDelta_ValueChanged" LargeChange="10" IsThumbToolTipEnabled="False" Foreground="Lime" Value="40" />
+            <TextBlock HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" Text="Farberhöhung" VerticalAlignment="Top" Width="175" FontSize="24" Margin="0,101,0,-77"/>
+            <TextBlock x:Name="StatusBox" HorizontalAlignment="Left" Height="49" TextWrapping="Wrap" VerticalAlignment="Top" Width="256" FontSize="24" Margin="0,376,0,-371" Foreground="#FF3C3C3C"/>
+            <TextBlock x:Name="FBSbox" HorizontalAlignment="Left" Height="49" TextWrapping="Wrap" VerticalAlignment="Top" Width="256" FontSize="24" Margin="0,433,0,-428" Foreground="#FF3C3C3C"/>
+
+        </Grid>
+        <Button x:Name="FeigenbaumButton" Content="Feigenbaum" HorizontalAlignment="Left" Height="68" Margin="919,26,0,0" VerticalAlignment="Top" Width="200" Background="AliceBlue" Foreground="#FF020202" FontSize="30" Click="FeigenbaumButton_Click"/>
+        <Slider x:Name="SliderStart" Visibility="Collapsed" HorizontalAlignment="Left" Height="40" Margin="10,298,0,0" VerticalAlignment="Top" Width="261" Maximum="100" Value="10000" LargeChange="1" Foreground="Lime" />
+        <Slider x:Name="SliderTiefe" Visibility="Collapsed" HorizontalAlignment="Left" Height="40" Margin="10,324,0,0" VerticalAlignment="Top" Width="261" Maximum="10000" Value="10000" />
+        <Slider x:Name="SliderX1" Visibility="Collapsed" HorizontalAlignment="Left" Height="40" Margin="10,349,0,0" VerticalAlignment="Top" Width="261" Maximum="500" Value="10000" Minimum="1" LargeChange="1" />
+        <Slider x:Name="SliderX2" Visibility="Collapsed" HorizontalAlignment="Left" Height="40" Margin="10,376,0,0" VerticalAlignment="Top" Width="261" Maximum="500" Value="10000" Minimum="1" LargeChange="1" />
+        <Slider x:Name="SliderY1" Visibility="Collapsed" HorizontalAlignment="Left" Height="40" Margin="10,403,0,0" VerticalAlignment="Top" Width="261" Maximum="100" Value="10000" />
+        <Slider x:Name="SliderY2" Visibility="Collapsed" HorizontalAlignment="Left" Height="40" Margin="10,435,0,0" VerticalAlignment="Top" Width="261" Maximum="100" Value="10000" />
+        <Button x:Name="SierpinskiButton_Copy" Content="Sierpinski 5" HorizontalAlignment="Left" Height="68" Margin="1130,26,0,0" VerticalAlignment="Top" Width="200" Background="AliceBlue" Foreground="#FF020202" FontSize="30" Click="SierpinskiButton_Copy_Click"/>
+        <TextBox x:Name="Box_Tiefe" HorizontalAlignment="Left" Height="20" Margin="163,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" Background="#66FFFFFF" BorderBrush="Transparent" TextChanged="Box_Tiefe_TextChanged" Text="30000"/>
+        <CheckBox x:Name="RenderAuto" Content="" HorizontalAlignment="Left" Margin="242,236,0,0" VerticalAlignment="Top" Checked="RenderAuto_Checked" Unchecked="RenderAuto_Unchecked" IsChecked="True" Foreground="Lime"/>
+        <Button x:Name="RenderButton" Content="Render" HorizontalAlignment="Left" Height="63" Margin="8,275,0,0" VerticalAlignment="Top" Width="259" Background="Azure" Foreground="#FF020202" FontSize="30" Click="RenderClick"/>
+        <TextBox x:Name="Box_Farbe" HorizontalAlignment="Left" Height="20" Margin="163,181,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" Background="#66FFFFFF" BorderBrush="Transparent" TextChanged="Box_Farbe_TextChanged" Text="40"/>
+        <Button x:Name="RenderButton_Copy" Content="Speichern" HorizontalAlignment="Left" Height="63" Margin="8,349,0,0" VerticalAlignment="Top" Width="259" Background="Azure" Foreground="#FF020202" FontSize="30" Click="SpeichernCick"/>
+        <ToggleButton x:Name="ButtonS" Content="S" HorizontalAlignment="Left" Margin="7,138,0,0" VerticalAlignment="Top" Width="55" Checked="ToggleButton_Checked" IsChecked="True"/>
+        <ToggleButton x:Name="ButtonM" Content="M" HorizontalAlignment="Left" Margin="112,140,0,0" VerticalAlignment="Top" Width="55" Checked="ToggleButton_Checked_1"/>
+        <ToggleButton x:Name="ButtonL" Content="L" HorizontalAlignment="Left" Margin="212,140,0,0" VerticalAlignment="Top" Width="55" Checked="ToggleButton_Checked_2"/>
+        <TextBox x:Name="SaveX" HorizontalAlignment="Left" Height="20" Margin="8,419,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" Background="#66FFFFFF" BorderBrush="Transparent" TextChanged="Box_Farbe_TextChanged" Text="1000" TextAlignment="Right"/>
+        <TextBox x:Name="SaveY" HorizontalAlignment="Left" Height="20" Margin="162,419,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" Background="#66FFFFFF" BorderBrush="Transparent" TextChanged="Box_Farbe_TextChanged" Text="1000"/>
+        <TextBlock HorizontalAlignment="Left" Margin="109,422,0,0" TextWrapping="Wrap" Text="X" VerticalAlignment="Top" Height="28" Width="55" TextAlignment="Center" FontSize="24"/>
+
+    </Grid>
+</Page>
