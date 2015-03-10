@@ -243,6 +243,28 @@ namespace SiFrakta
                 // Redraw the WriteableBitmap
                 Scenario4WriteableBitmap.Invalidate();
             }
+            if (modus == 4)
+            {
+                int pixelWidth = Scenario4WriteableBitmap.PixelWidth;
+                int pixelHeight = Scenario4WriteableBitmap.PixelHeight;
+                Zellulär z1 = new Zellulär();
+                // Asynchronously graph the Mandelbrot set on a background thread
+                byte[] result = null;
+                await ThreadPool.RunAsync(new WorkItemHandler(
+                    (IAsyncAction action) =>
+                    {
+                        result = z1.Draw(pixelWidth, pixelHeight);
+                    }
+                    ));
+                // Open a stream to copy the graph to the WriteableBitmap's pixel buffer
+                using (Stream stream = Scenario4WriteableBitmap.PixelBuffer.AsStream())
+                {
+                    await stream.WriteAsync(result, 0, result.Length);
+                }
+
+                // Redraw the WriteableBitmap
+                Scenario4WriteableBitmap.Invalidate();
+            }
             rechnen = false;
             zeit.Stop();
             fpsvalue[fpscounter] = 1000 / zeit.ElapsedMilliseconds;
@@ -586,6 +608,17 @@ namespace SiFrakta
             pX = e.GetCurrentPoint(sender as UIElement).Position.X / ImgContainer.Width;
             pY = e.GetCurrentPoint(sender as UIElement).Position.Y / ImgContainer.Height;
             Refresh((int)(GetTiefe()));*/
+        }
+
+        private void ZellButton_Click(object sender, RoutedEventArgs e)
+        {
+            fpsvalue = new double[5];
+            modus = 4;
+            FarbeDelta.Visibility = Visibility.Visible;
+            SliderVT.Visibility = Visibility.Visible;
+            Box_Farbe.Visibility = Visibility.Visible;
+            Box_Tiefe.Visibility = Visibility.Visible;
+            Refresh((int)(GetTiefe()));
         }
     }
 }
