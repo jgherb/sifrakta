@@ -10,14 +10,14 @@ x:Name="ImgContainer" Margin="292,143,74,25">
             <Image x:Name="Img1" />
         </Viewbox>
         <Button x:Name="MandelbrotButton" Content="Mandelbrot" HorizontalAlignment="Left" Height="68" Margin="501,26,0,0" VerticalAlignment="Top" Width="200" Background="AliceBlue" Foreground="#FF020202" FontSize="30" Click="MandelbrotButton_Click"/>
-        <TextBlock HorizontalAlignment="Left" Height="39" Margin="10,719,0,0" TextWrapping="Wrap" Text="Julius Herb" VerticalAlignment="Top" Width="261" FontSize="36" TextAlignment="Center" FontFamily="Adobe Caslon Pro"/>
+        <TextBlock HorizontalAlignment="Left" Height="39" Margin="10,719,0,0" TextWrapping="Wrap" Text="Julius Herb" VerticalAlignment="Top" Width="261" FontSize="36" TextAlignment="Center" FontFamily="Adobe Caslon Pro" Foreground="White"/>
         <Grid Margin="10,82,1100,632">
             <Slider x:Name="SliderVT" HorizontalAlignment="Left" Height="40" Margin="-1,23,0,-9" VerticalAlignment="Top" Width="257" Maximum="100000" ValueChanged="SliderVT_ValueChanged" LargeChange="100" Foreground="Lime" Value="30000" />
-            <TextBlock HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" Text="Versuchstiefe" VerticalAlignment="Top" Width="175" FontSize="24" Margin="-1,-12,0,0" RenderTransformOrigin="0.457,-0.367"/>
+            <TextBlock HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" Text="Versuchstiefe" VerticalAlignment="Top" Width="175" FontSize="24" Margin="-1,-15,0,0" RenderTransformOrigin="0.457,-0.367" Foreground="White"/>
             <TextBlock HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" Text="Render automatically" VerticalAlignment="Top" Width="228" FontSize="24" Margin="0,152,0,-128"/>
             <Slider x:Name="FarbeDelta" HorizontalAlignment="Left" Height="40" Margin="-1,137,-14,-96" VerticalAlignment="Top" Width="257" Maximum="255" LargeChange="10" Foreground="Lime" Value="40" ValueChanged="FarbeDelta_ValueChanged_1" />
-            <TextBlock HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" Text="Farberhöhung" VerticalAlignment="Top" Width="175" FontSize="24" Margin="0,101,0,-77"/>
-            <TextBlock x:Name="StatusBox" HorizontalAlignment="Left" Height="49" TextWrapping="Wrap" VerticalAlignment="Top" Width="256" FontSize="24" Margin="0,376,0,-371" Foreground="#FF3C3C3C"/>
+            <TextBlock HorizontalAlignment="Left" Height="30" TextWrapping="Wrap" Text="Farberhöhung" VerticalAlignment="Top" Width="175" FontSize="24" Margin="0,97,0,-46" Foreground="White"/>
+            <TextBlock x:Name="StatusBox" HorizontalAlignment="Left" Height="49" TextWrapping="Wrap" VerticalAlignment="Top" Width="256" FontSize="24" Margin="0,376,0,-371" Foreground="#FF727272"/>
             <TextBlock x:Name="FBSbox" HorizontalAlignment="Left" Height="49" TextWrapping="Wrap" VerticalAlignment="Top" Width="256" FontSize="24" Margin="0,433,0,-428" Foreground="#FF3C3C3C"/>
         </Grid>
         <Button x:Name="FeigenbaumButton" Content="Feigenbaum" HorizontalAlignment="Left" Height="68" Margin="712,26,0,0" VerticalAlignment="Top" Width="200" Background="AliceBlue" Foreground="#FF020202" FontSize="30" Click="FeigenbaumButton_Click"/>
@@ -36,8 +36,8 @@ x:Name="ImgContainer" Margin="292,143,74,25">
         <ToggleButton x:Name="ButtonS" Content="S" HorizontalAlignment="Left" Margin="7,138,0,0" VerticalAlignment="Top" Width="55" IsChecked="True" Checked="ButtonS_Checked"/>
         <ToggleButton x:Name="ButtonM" Content="M" HorizontalAlignment="Left" Margin="112,140,0,0" VerticalAlignment="Top" Width="55" Checked="ButtonM_Checked"/>
         <ToggleButton x:Name="ButtonL" Content="L" HorizontalAlignment="Left" Margin="212,140,0,0" VerticalAlignment="Top" Width="55" Checked="ToggleButton_Checked_2"/>
-        <TextBox x:Name="SaveX" HorizontalAlignment="Left" Height="20" Margin="8,419,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" Background="#66FFFFFF" BorderBrush="Transparent" TextChanged="Box_Farbe_TextChanged" Text="1000" TextAlignment="Right"/>
-        <TextBox x:Name="SaveY" HorizontalAlignment="Left" Height="20" Margin="162,419,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" Background="#66FFFFFF" BorderBrush="Transparent" TextChanged="Box_Farbe_TextChanged" Text="1000"/>
+        <TextBox x:Name="SaveX" HorizontalAlignment="Left" Height="20" Margin="8,419,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" Background="#66FFFFFF" BorderBrush="Transparent" TextChanged="Box_Farbe_TextChanged" Text="1000" TextAlignment="Right" IsEnabled="False"/>
+        <TextBox x:Name="SaveY" HorizontalAlignment="Left" Height="20" Margin="162,419,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="103" Background="#66FFFFFF" BorderBrush="Transparent" TextChanged="Box_Farbe_TextChanged" Text="1000" IsEnabled="False"/>
         <TextBlock HorizontalAlignment="Left" Margin="109,422,0,0" TextWrapping="Wrap" Text="X" VerticalAlignment="Top" Height="28" Width="55" TextAlignment="Center" FontSize="24"/>
         <Button x:Name="ZellButton" Content="Zellulär" HorizontalAlignment="Left" Height="68" Margin="1137,26,0,0" VerticalAlignment="Top" Width="200" Background="AliceBlue" Foreground="#FF020202" FontSize="30" Click="ZellButton_Click"/>
     </Grid>
