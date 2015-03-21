@@ -135,6 +135,7 @@ namespace SiFrakta_D
         //--Renderaufruf
         void aktu(object sender, object e)
         {
+            //CPU_Box.Text = cpuCounter.NextValue() + "";
             if (!rechnen)
             {
                 Refresh((int)(GetTiefe()));
