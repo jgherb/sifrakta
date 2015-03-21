@@ -33,11 +33,10 @@ namespace SiFrakta_D
         {
             InitializeComponent();
             tickTimer = new DispatcherTimer();
-            tickTimer.Interval = new TimeSpan(0, 0, 0, 0, 150);
+            tickTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             tickTimer.Tick += aktu;
             //InitialisierePerformanceCounter();
             aktuValue = SliderVT.Value;
-            tickTimer.Start();
             timerinit = true;
             Refresh((int)GetTiefe());
         }
