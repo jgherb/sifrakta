@@ -339,7 +339,7 @@ namespace SiFrakta_D
         void Saving(int vts, int savew, int saveh, String file)
         {
             savew = 1000;
-            saveh = 1000;
+            saveh = 600;
             rechnen = true;
             int fd = 5;
             StatusBox.Text = "Saving...";
