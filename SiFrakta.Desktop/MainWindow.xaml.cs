@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -17,6 +18,7 @@ using System.Windows.Shapes;
 using System.Numerics;
 using SiFrakta;
 using System.Diagnostics;
+using System.IO;
 
 namespace SiFrakta_D
 {
@@ -25,6 +27,7 @@ namespace SiFrakta_D
     /// </summary>
     public partial class MainWindow : Window
     {
+        //Konstruktor
         public MainWindow()
         {
             InitializeComponent();
@@ -37,6 +40,7 @@ namespace SiFrakta_D
             timerinit = true;
             Refresh((int)GetTiefe());
         }
+        //Deklarationen
         static PerformanceCounter cpuCounter;
         int imgw = 1000;
         int imgh = 600;
@@ -58,20 +62,6 @@ namespace SiFrakta_D
         int timesTicked = 500;
         private WriteableBitmap Scenario4WriteableBitmap;
         private WriteableBitmap SpeicherWriteableBitmap;
-        static void InitialisierePerformanceCounter() // Initialisieren
-        {
-            cpuCounter = new PerformanceCounter();
-            cpuCounter.CategoryName = "Processor";
-            cpuCounter.CounterName = "% Processor Time";
-            cpuCounter.InstanceName = "_Total"; // "_Total" entspricht der gesamten CPU Auslastung, Bei Computern mit mehr als 1 logischem Prozessor: "0" dem ersten Core, "1" dem zweiten...
-        }
-        void aktu(object sender, object e)
-        {
-            if (!rechnen)
-            {
-                Refresh((int)(GetTiefe()));
-            }
-        }
         void Refresh(int vts)
         {
             rechnen = true;
@@ -135,20 +125,41 @@ namespace SiFrakta_D
             }
             StatusBox.Text = "";
         }
-        private void Button_Click(object sender, RoutedEventArgs e)
+        int TTcreate()
+        {
+            return 0;
+        }
+        //Initialisieren
+        static void InitialisierePerformanceCounter()
+        {
+            cpuCounter = new PerformanceCounter();
+            cpuCounter.CategoryName = "Processor";
+            cpuCounter.CounterName = "% Processor Time";
+            cpuCounter.InstanceName = "_Total"; // "_Total" entspricht der gesamten CPU Auslastung, Bei Computern mit mehr als 1 logischem Prozessor: "0" dem ersten Core, "1" dem zweiten...
+        }
+        //--Renderaufruf
+        void aktu(object sender, object e)
+        {
+            if (!rechnen)
+            {
+                Refresh((int)(GetTiefe()));
+            }
+        }
+        private void RenderClick(object sender, RoutedEventArgs e)
         {
             fpsvalue = new double[5];
-            modus = 0;
+            Refresh((int)(GetTiefe()));
+        }
+        //--Fraktalmodus wählen
+        private void ZellButton_Click(object sender, RoutedEventArgs e)
+        {
+            fpsvalue = new double[5];
+            modus = 4;
             FarbeDelta.Visibility = Visibility.Visible;
             SliderVT.Visibility = Visibility.Visible;
             Box_Farbe.Visibility = Visibility.Visible;
             Box_Tiefe.Visibility = Visibility.Visible;
             Refresh((int)(GetTiefe()));
-            //SierpinskiButton.Background = new Brush();
-        }
-        int TTcreate()
-        {
-            return 0;
         }
         private void MandelbrotButton_Click(object sender, RoutedEventArgs e)
         {
@@ -180,14 +191,17 @@ namespace SiFrakta_D
             Box_Tiefe.Visibility = Visibility.Visible;
             Refresh((int)(GetTiefe()));
         }
-        private void Box_Tiefe_TextChanged(object sender, TextChangedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                SliderVT.Value = GetScale();
-            }
-            catch (Exception e1) { }
+            fpsvalue = new double[5];
+            modus = 0;
+            FarbeDelta.Visibility = Visibility.Visible;
+            SliderVT.Visibility = Visibility.Visible;
+            Box_Farbe.Visibility = Visibility.Visible;
+            Box_Tiefe.Visibility = Visibility.Visible;
+            Refresh((int)(GetTiefe()));
         }
+        //--Rendermodus wählen
         private void RenderAuto_Checked(object sender, RoutedEventArgs e)
         {
             if (timerinit) { tickTimer.Start(); }
@@ -196,149 +210,7 @@ namespace SiFrakta_D
         {
             tickTimer.Stop();
         }
-        private void RenderClick(object sender, RoutedEventArgs e)
-        {
-            fpsvalue = new double[5];
-            Refresh((int)(GetTiefe()));
-        }
-        private void Box_Farbe_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            try
-            {
-                FarbeDelta.Value = Double.Parse(Box_Farbe.Text);
-            }
-            catch (Exception e1) { }
-        }
-        private void FarbeDelta_ValueChanged(object sender)
-        {
-            fpsvalue = new double[5];
-            try
-            {
-                Box_Farbe.Text = FarbeDelta.Value + "";
-            }
-            catch (Exception e1) { }
-        }
-        async void Saving(int vts, int pixelWidth, int pixelHeight)
-        {
-            /*SpeicherWriteableBitmap = new WriteableBitmap(pixelWidth, pixelHeight);
-            rechnen = true;
-            if (modus == 0)
-            {
-            Sierpinski si = new Sierpinski(Int32.Parse(SaveX.Text), Int32.Parse(SaveY.Text), 10);
-            int fdelta = (int)FarbeDelta.Value;
-            // Asynchronously graph the Mandelbrot set on a background thread
-            byte[] result = null;
-            await ThreadPool.RunAsync(new WorkItemHandler(
-            (IAsyncAction action) =>
-            {
-            result = si.Draw(pixelWidth, pixelHeight, vts, fdelta);
-            }
-            ));
-            using (Stream stream = SpeicherWriteableBitmap.PixelBuffer.AsStream())
-            {
-            await stream.WriteAsync(result, 0, result.Length);
-            }
-            }
-            if (modus == 1)
-            {
-            Sierpinski si = new Sierpinski(Int32.Parse(SaveX.Text), Int32.Parse(SaveY.Text), 10);
-            int fdelta = (int)FarbeDelta.Value;
-            // Asynchronously graph the Mandelbrot set on a background thread
-            byte[] result = null;
-            await ThreadPool.RunAsync(new WorkItemHandler(
-            (IAsyncAction action) =>
-            {
-            result = si.Draw5(pixelWidth, pixelHeight, vts, fdelta);
-            }
-            ));
-            using (Stream stream = SpeicherWriteableBitmap.PixelBuffer.AsStream())
-            {
-            await stream.WriteAsync(result, 0, result.Length);
-            }
-            }
-            if (modus == 2)
-            {
-            Feigenbaum fb = new Feigenbaum();
-            int fdelta = (int)FarbeDelta.Value;
-            // Asynchronously graph the Mandelbrot set on a background thread
-            byte[] result = null;
-            await ThreadPool.RunAsync(new WorkItemHandler(
-            (IAsyncAction action) =>
-            {
-            result = fb.Draw(0.5, vts, pixelWidth, pixelHeight, 0, 1, 3, 4, fdelta);
-            }
-            ));
-            using (Stream stream = SpeicherWriteableBitmap.PixelBuffer.AsStream())
-            {
-            await stream.WriteAsync(result, 0, result.Length);
-            }
-            }
-            if (modus == 3)
-            {
-            // Asynchronously graph the Mandelbrot set on a background thread
-            byte[] result = null;
-            await ThreadPool.RunAsync(new WorkItemHandler(
-            (IAsyncAction action) =>
-            {
-            result = Mandelbrot.DrawMandelbrotGraph(pixelWidth, pixelHeight);
-            }
-            ));
-            // Open a stream to copy the graph to the WriteableBitmap's pixel buffer
-            using (Stream stream = SpeicherWriteableBitmap.PixelBuffer.AsStream())
-            {
-            await stream.WriteAsync(result, 0, result.Length);
-            }
-            }
-            rechnen = false;*/
-        }
-        private async void SpeichernCick(object sender, RoutedEventArgs e)
-        {
-            /*fpsvalue = new double[5];
-            StatusBox.Text = "Saving Bitmap...";
-            Saving((int)(GetTiefe()), Int32.Parse(SaveX.Text), Int32.Parse(SaveY.Text));
-            FileSavePicker picker = new FileSavePicker();
-            picker.FileTypeChoices.Add("JPG File", new List<string>() { ".jpg" });
-            StorageFile savefile = await picker.PickSaveFileAsync();
-            if (savefile == null)
-            return;
-            IRandomAccessStream stream = await savefile.OpenAsync(FileAccessMode.ReadWrite);
-            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
-            // Get pixels of the WriteableBitmap object
-            Stream pixelStream = SpeicherWriteableBitmap.PixelBuffer.AsStream();
-            byte[] pixels = new byte[pixelStream.Length];
-            await pixelStream.ReadAsync(pixels, 0, pixels.Length);
-            // Save the image file with jpg extension
-            encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)SpeicherWriteableBitmap.PixelWidth, (uint)SpeicherWriteableBitmap.PixelHeight, 96.0, 96.0, pixels);
-            await encoder.FlushAsync();
-            encoder.FlushAsync();
-            StatusBox.Text = "";*/
-        }
-        int GetTiefe()
-        {
-            int ret = 0;
-            if (scalelog)
-            {
-                ret = (int)Math.Pow(SliderVT.Value, 2);
-            }
-            else
-            {
-                ret = (int)SliderVT.Value;
-            }
-            return ret;
-        }
-        int GetScale()
-        {
-            int ret = 0;
-            if (scalelog)
-            {
-                ret = (int)Math.Sqrt(Double.Parse(Box_Tiefe.Text));
-            }
-            else
-            {
-                ret = (int)SliderVT.Value;
-            }
-            return ret;
-        }
+        //--GUI Bindings
         private void ToggleButton_Checked_2(object sender, RoutedEventArgs e)
         {
             ButtonS.IsChecked = false;
@@ -348,22 +220,12 @@ namespace SiFrakta_D
             SliderVT.Value = 1000000;
             Box_Tiefe.Text = "1000000";
         }
-        private void ZellButton_Click(object sender, RoutedEventArgs e)
-        {
-            fpsvalue = new double[5];
-            modus = 4;
-            FarbeDelta.Visibility = Visibility.Visible;
-            SliderVT.Visibility = Visibility.Visible;
-            Box_Farbe.Visibility = Visibility.Visible;
-            Box_Tiefe.Visibility = Visibility.Visible;
-            Refresh((int)(GetTiefe()));
-        }
         private void FarbeDelta_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             fpsvalue = new double[5];
             try
             {
-                Box_Tiefe.Text = GetTiefe() + "";
+                Box_Farbe.Text = GetTiefe() + "";
             }
             catch (Exception e1) { }
         }
@@ -396,6 +258,117 @@ namespace SiFrakta_D
             SliderVT.Value = 10000;
             Box_Tiefe.Text = "10000";
         }
+        private void Box_Tiefe_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                SliderVT.Value = GetScale();
+            }
+            catch (Exception e1) { }
+        }      
+        private void Box_Farbe_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                FarbeDelta.Value = Double.Parse(Box_Farbe.Text);
+            }
+            catch (Exception e1) { }
+        }
+        private void FarbeDelta_ValueChanged(object sender)
+        {
+            fpsvalue = new double[5];
+            try
+            {
+                Box_Farbe.Text = FarbeDelta.Value + "";
+            }
+            catch (Exception e1) { }
+        }
+        int GetTiefe()
+        {
+            int ret = 0;
+            if (scalelog)
+            {
+                ret = (int)Math.Pow(SliderVT.Value, 2);
+            }
+            else
+            {
+                ret = (int)SliderVT.Value;
+            }
+            return ret;
+        }
+        int GetScale()
+        {
+            int ret = 0;
+            if (scalelog)
+            {
+                ret = (int)Math.Sqrt(Double.Parse(Box_Tiefe.Text));
+            }
+            else
+            {
+                ret = (int)SliderVT.Value;
+            }
+            return ret;
+        }
+        //--Speicheraufruf
+        void Saving(int vts, int savew, int saveh, String file)
+        {
+            savew = 1000;
+            saveh = 1000;
+            rechnen = true;
+            int fd = 5;
+            StatusBox.Text = "Saving...";
+            Stopwatch zeit = new Stopwatch();
+            zeit.Start();
+            byte[] pixelData = null;
+            if (modus == 0)
+            {
+                Sierpinski s1 = new Sierpinski();
+                pixelData = s1.Draw(savew, saveh, vts, fd);//Pixeldaten mit je 4 Byte/Pixel   
+            }
+            if (modus == 1)
+            {
+                Sierpinski s1 = new Sierpinski();
+                pixelData = s1.Draw5(savew, saveh, vts, fd);
+            }
+            if (modus == 2)
+            {
+                Feigenbaum fb = new Feigenbaum();
+                pixelData = fb.Draw(0.5, vts, savew, saveh, 0, 1, 3, 4, fd);
+            }
+            if (modus == 3)
+            {
+                pixelData = Mandelbrot.DrawMandelbrotGraph(savew, saveh);
+            }
+            if (modus == 4)
+            {
+                Zellulär z1 = new Zellulär();
+                pixelData = z1.Draw(savew, saveh);
+            }
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(BitmapSource.Create(savew, saveh, 96D, 96D, PixelFormats.Bgr32, BitmapPalettes.WebPalette, pixelData, imgw * 4)));//Anhand der Pixeldaten erzeugen
+            using (var sw = File.Create(file))//Stream erzeugen
+                encoder.Save(sw);//Bild speichern
+            StatusBox.Text = "";
+        }
+        private void SpeichernCick(object sender, RoutedEventArgs e)
+        {
+            // Configure save file dialog box
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.FileName = "Fraktal"; // Default file name
+            dlg.DefaultExt = ".png"; // Default file extension
+            dlg.Filter = "Pictures (.png)|*.png"; // Filter files by extension
+
+            // Show save file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Process save file dialog box results
+            if (result == true)
+            {
+                // Save document
+                string filename = dlg.FileName;
+                Saving((int)(GetTiefe()), Int32.Parse(SaveX.Text), Int32.Parse(SaveY.Text), filename);
+            }
+            StatusBox.Text = "";
+        }
     }
 }
-   
