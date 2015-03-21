@@ -19,6 +19,7 @@ using System.Numerics;
 using SiFrakta;
 using System.Diagnostics;
 using System.IO;
+using System.Windows;
 
 namespace SiFrakta_D
 {
@@ -32,7 +33,7 @@ namespace SiFrakta_D
         {
             InitializeComponent();
             tickTimer = new DispatcherTimer();
-            tickTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            tickTimer.Interval = new TimeSpan(0, 0, 0, 0, 150);
             tickTimer.Tick += aktu;
             //InitialisierePerformanceCounter();
             aktuValue = SliderVT.Value;
@@ -55,17 +56,12 @@ namespace SiFrakta_D
         bool scalelog = false;
         bool rechnen = false;
         bool timeraktiv = false;
-        DispatcherTimer dispatcherTimer;
         DispatcherTimer tickTimer;
-        DateTimeOffset startTime;
-        DateTimeOffset lastTime;
         int timesTicked = 500;
-        private WriteableBitmap Scenario4WriteableBitmap;
-        private WriteableBitmap SpeicherWriteableBitmap;
         void Refresh(int vts)
         {
             rechnen = true;
-            int fd = 5;
+            int fd = (int)FarbeDelta.Value;
             StatusBox.Text = "Rendern...";
             Stopwatch zeit = new Stopwatch();
             zeit.Start();
@@ -153,6 +149,11 @@ namespace SiFrakta_D
         //--Fraktalmodus wählen
         private void ZellButton_Click(object sender, RoutedEventArgs e)
         {
+            SierpinskiButton.Background = new SolidColorBrush(Colors.White);
+            MandelbrotButton.Background = new SolidColorBrush(Colors.White);
+            FeigenbaumButton.Background = new SolidColorBrush(Colors.White);
+            ZellButton.Background = new SolidColorBrush(Colors.Green);
+            SierpinskiButton_Copy.Background = new SolidColorBrush(Colors.White);
             fpsvalue = new double[5];
             modus = 4;
             FarbeDelta.Visibility = Visibility.Visible;
@@ -163,6 +164,11 @@ namespace SiFrakta_D
         }
         private void MandelbrotButton_Click(object sender, RoutedEventArgs e)
         {
+            SierpinskiButton.Background = new SolidColorBrush(Colors.White);
+            MandelbrotButton.Background = new SolidColorBrush(Colors.Green);
+            FeigenbaumButton.Background = new SolidColorBrush(Colors.White);
+            ZellButton.Background = new SolidColorBrush(Colors.White);
+            SierpinskiButton_Copy.Background = new SolidColorBrush(Colors.White);
             fpsvalue = new double[5];
             modus = 3;
             FarbeDelta.Visibility = Visibility.Collapsed;
@@ -173,6 +179,11 @@ namespace SiFrakta_D
         }
         private void FeigenbaumButton_Click(object sender, RoutedEventArgs e)
         {
+            SierpinskiButton.Background = new SolidColorBrush(Colors.White);
+            MandelbrotButton.Background = new SolidColorBrush(Colors.White);
+            FeigenbaumButton.Background = new SolidColorBrush(Colors.Green);
+            ZellButton.Background = new SolidColorBrush(Colors.White);
+            SierpinskiButton_Copy.Background = new SolidColorBrush(Colors.White);
             fpsvalue = new double[5];
             modus = 2;
             FarbeDelta.Visibility = Visibility.Visible;
@@ -183,6 +194,11 @@ namespace SiFrakta_D
         }
         private void SierpinskiButton_Copy_Click(object sender, RoutedEventArgs e)
         {
+            SierpinskiButton.Background = new SolidColorBrush(Colors.White);
+            MandelbrotButton.Background = new SolidColorBrush(Colors.White);
+            FeigenbaumButton.Background = new SolidColorBrush(Colors.White);
+            ZellButton.Background = new SolidColorBrush(Colors.White);
+            SierpinskiButton_Copy.Background = new SolidColorBrush(Colors.Green);
             fpsvalue = new double[5];
             modus = 1;
             FarbeDelta.Visibility = Visibility.Visible;
@@ -193,6 +209,11 @@ namespace SiFrakta_D
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            SierpinskiButton.Background = new SolidColorBrush(Colors.Green);
+            MandelbrotButton.Background = new SolidColorBrush(Colors.White);
+            FeigenbaumButton.Background = new SolidColorBrush(Colors.White);
+            ZellButton.Background = new SolidColorBrush(Colors.White);
+            SierpinskiButton_Copy.Background = new SolidColorBrush(Colors.White);
             fpsvalue = new double[5];
             modus = 0;
             FarbeDelta.Visibility = Visibility.Visible;
@@ -220,19 +241,6 @@ namespace SiFrakta_D
             SliderVT.Value = 1000000;
             Box_Tiefe.Text = "1000000";
         }
-        private void FarbeDelta_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            fpsvalue = new double[5];
-            try
-            {
-                Box_Farbe.Text = GetTiefe() + "";
-            }
-            catch (Exception e1) { }
-        }
-        private void SliderVT_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
-        }
         private void ButtonS_Checked(object sender, RoutedEventArgs e)
         {
             try
@@ -257,6 +265,24 @@ namespace SiFrakta_D
             SliderVT.Maximum = 1000000;
             SliderVT.Value = 10000;
             Box_Tiefe.Text = "10000";
+        }
+        private void FarbeDelta_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            fpsvalue = new double[5];
+            try
+            {
+                Box_Farbe.Text = (int)FarbeDelta.Value + "";
+            }
+            catch (Exception e1) { }
+        }
+        private void SliderVT_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            fpsvalue = new double[5];
+            try
+            {
+                Box_Tiefe.Text = GetTiefe() +"";
+            }
+            catch (Exception e1) { }
         }
         private void Box_Tiefe_TextChanged(object sender, TextChangedEventArgs e)
         {
