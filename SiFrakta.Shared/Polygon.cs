@@ -52,17 +52,23 @@ namespace SiFrakta_D
                     max2 = daten[i, 0];
                 }
             }
+            double max1 = 0;
             for (int i = 0; i < modus; i++)
             {
-                if (max < daten[i, 1])
+                if (max1 > daten[i, 1])
                 {
-                    max = daten[i, 1];
+                    max1 = daten[i, 1];
                 }
             }
-            double scale1 = height / max;
+            max1 = (-1) * max1;
+            double scale1 = height / max1;
             double scale2 = width / max2;
             double scale = scale1;
-            if (scale2 < scale1)
+            if (scale1<scale2)
+            {
+                scale = scale1;
+            }
+            if (scale2<scale1)
             {
                 scale = scale2;
             }
