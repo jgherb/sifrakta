@@ -41,6 +41,9 @@ namespace SiFrakta_D
             Refresh((int)GetTiefe());
         }
         //Deklarationen
+        Sierpinski si3 = new Sierpinski();
+        Sierpinski si5 = new Sierpinski();
+        Sierpinski siC = new Sierpinski();
         static PerformanceCounter cpuCounter;
         int imgw = 1000;
         int imgh = 600;
@@ -67,13 +70,11 @@ namespace SiFrakta_D
             byte[] pixelData = null;
             if (modus == 0)
             {
-                Sierpinski s1 = new Sierpinski();
-                pixelData = s1.Draw(imgw, imgh, vts, fd);//Pixeldaten mit je 4 Byte/Pixel   
+                pixelData = si3.Draw(imgw, imgh, vts, fd);//Pixeldaten mit je 4 Byte/Pixel   
             }
             if (modus == 1)
             {
-                Sierpinski s1 = new Sierpinski();
-                pixelData = s1.Draw5(imgw, imgh, vts, fd);
+                pixelData = si5.Draw5(imgw, imgh, vts, fd);
             }
             if (modus == 2)
             {
@@ -86,8 +87,28 @@ namespace SiFrakta_D
             }
             if (modus == 4)
             {
+                //Special1 s1 = new Special1();
                 Zellulär z1 = new Zellulär();
                 pixelData = z1.Draw(imgw, imgh);
+            }
+            if (modus == 5)
+            {
+                try
+                {
+                    int ecken = Int32.Parse(SiC_Box.Text);
+                    if (ecken > 2)
+                    {
+                        pixelData = siC.DrawC(ecken, imgw, imgh, vts, fd);
+                    }
+                    else
+                    {
+                        pixelData = new byte[imgw * imgh * 4];
+                    }
+                }
+                catch (Exception e)
+                {
+                    pixelData = new byte[imgw * imgh * 4];
+                }
             }
             var wb = new WriteableBitmap(imgw, imgh, 96, 96, PixelFormats.Bgr32, null);
             wb.WritePixels(new Int32Rect(0, 0, imgw, imgh), pixelData, imgw * 4, 0);
@@ -280,7 +301,7 @@ namespace SiFrakta_D
             fpsvalue = new double[5];
             try
             {
-                Box_Tiefe.Text = GetTiefe() +"";
+                Box_Tiefe.Text = GetTiefe() + "";
             }
             catch (Exception e1) { }
         }
@@ -291,7 +312,7 @@ namespace SiFrakta_D
                 SliderVT.Value = GetScale();
             }
             catch (Exception e1) { }
-        }      
+        }
         private void Box_Farbe_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
@@ -370,6 +391,25 @@ namespace SiFrakta_D
                 Zellulär z1 = new Zellulär();
                 pixelData = z1.Draw(savew, saveh);
             }
+            if (modus == 5)
+            {
+                try
+                {
+                    int ecken = Int32.Parse(SiC_Box.Text);
+                    if (ecken > 2)
+                    {
+                        pixelData = siC.DrawC(ecken, imgw, imgh, vts, fd);
+                    }
+                    else
+                    {
+                        pixelData = new byte[imgw * imgh * 4];
+                    }
+                }
+                catch (Exception e)
+                {
+                    pixelData = new byte[imgw * imgh * 4];
+                }
+            }
             var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(BitmapSource.Create(savew, saveh, 96D, 96D, PixelFormats.Bgr32, BitmapPalettes.WebPalette, pixelData, imgw * 4)));//Anhand der Pixeldaten erzeugen
             using (var sw = File.Create(file))//Stream erzeugen
@@ -378,6 +418,7 @@ namespace SiFrakta_D
         }
         private void SpeichernCick(object sender, RoutedEventArgs e)
         {
+            timeraktiv = false;
             // Configure save file dialog box
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
             dlg.FileName = "Fraktal"; // Default file name
@@ -394,7 +435,19 @@ namespace SiFrakta_D
                 string filename = dlg.FileName;
                 Saving((int)(GetTiefe()), Int32.Parse(SaveX.Text), Int32.Parse(SaveY.Text), filename);
             }
+            timeraktiv = true;
             StatusBox.Text = "";
+        }
+
+        private void SierpinskiC_Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            modus = 5;
+        }
+
+        private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Credits c1 = new Credits();
+            c1.Show();
         }
     }
 }
