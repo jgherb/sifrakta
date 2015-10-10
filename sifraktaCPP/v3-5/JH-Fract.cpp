@@ -5,7 +5,7 @@
 * Licensed under the terms of WTFPL v2
 * #BUGS: polygons with many corners have mistakes in the right lower corner!
 * @author: Julius Herb (jgherb@live.de)
-* @version: v4.0-dev (2015_10_09)
+* @version: v3.5 (2015_10_10)
 */
 
 #include "JH-Fract.h"
@@ -18,7 +18,6 @@
 #include <algorithm>
 #include <vector>
 using namespace std;
-#define PI 3.14159265
 
 //Parameters
 ///////////////////////////////////////////////////////////////////
@@ -34,105 +33,34 @@ double ColorMode_v = 1; //HSV-Value
 int BG_R = 0;
 int BG_G = 0;
 int BG_B = 0;
-void generateCorners();
 
-//Arrays
+//Variablen
 vector<int> corners;
 vector<int> sourcebuffer;
-
-void generateCorners() {
-    vector<double> daten (corner_count*2);
-    corners.resize(corner_count*2);
-    double seite = 10;
-    double rad = seite / (2 * Sin(180 / corner_count));
-    double winkela = 360 / corner_count;//180-360/corner_count;
-    double winkelc = 180 - 2 * winkela;
-    for (int i = 0; i < corner_count; i++)
-    {
-        daten[i*2+1] = Cos(winkelc) * rad;
-        daten[i*2] = Sin(winkelc) * rad;
-        winkelc = winkelc + winkela;
-    }
-
-    double min = 0;
-    for (int i = 0; i < corner_count; i++)
-    {
-        if (min > daten[i*2])
-        {
-            min = daten[i*2];
-        }
-    }
-    double max = 0;
-    for (int i = 0; i < corner_count; i++)
-    {
-        if (max < daten[i*2+1])
-        {
-            max = daten[i*2+1];
-        }
-    }
-    for (int i = 0; i < corner_count; i++)
-    {
-        daten[i*2] = daten[i*2] - min;
-        daten[i*2+1] = (daten[i*2+1] - max);
-    }
-    double max2 = 0;
-    for (int i = 0; i < corner_count; i++)
-    {
-        if (max2 < daten[i*20])
-        {
-            max2 = daten[i*2];
-        }
-    }
-    double max1 = 0;
-    for (int i = 0; i < corner_count; i++)
-    {
-        if (max1 > daten[i*2+1])
-        {
-            max1 = daten[i*2+1];
-        }
-    }
-    max1 = (-1) * max1;
-    double scale1 = height / max1;
-    double scale2 = width / max2;
-    double scale = scale1;
-    if (scale1 < scale2)
-    {
-        scale = scale1;
-    }
-    if (scale2 < scale1)
-    {
-        scale = scale2;
-    }
-    int corners[corner_count][2];
-    for (int i = 0; i < corner_count; i++)
-    {
-        corners[i*2] = (int)(daten[i*2] * scale);
-        corners[i*2+1] = (int)(daten[i*2+1] * scale * (-1));
-    }
-}
+double faktor = 1;
 
 //Main method
 ///////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[]) {
-    cout << "JH-Fract v3.4 ::: Julius Herb (jgherb@live.de) ::: use -help for Help\n";
+    cout << "JH-Fract v3.5 ::: Julius Herb (jgherb@live.de) ::: use -help for Help\n";
     if(cmdOptionExists(argv, argv+argc, "-help"))
     {
         cout << "Argument Syntax:" << "\n";
-        cout << "_____________________________________________________________________" << "\n";
-        cout << "| Iterations:       | -i    |                                       |" << "\n";
-        cout << "| Width:            | -w    |                                       |" << "\n";
-        cout << "| Heigth:           | -h    |                                       |" << "\n";
-        cout << "| Corner count:     | -c    |                                       |" << "\n";
-        cout << "| ColorMode:        | -cm   | (0=MultiColor;1=Red;2=Green;3=Blue)   |" << "\n";
-        cout << "| ColorMode_s:      | -cs   | (Saturation of HSV)                   |" << "\n";
-        cout << "| ColorMode_v:      | -cv   | (Value of HSV)                        |" << "\n";
-        cout << "| Background r:     | -br   | (Red value of Background color)       |" << "\n";
-        cout << "| Background g:     | -bg   | (Green value of Background color)     |" << "\n";
-        cout << "| Background b:     | -bb   | (Blue value of Background color)      |" << "\n";
-        cout << "| Increment:        | -ic   |                                       |" << "\n";
-        cout << "| Report frequency: | -rf   | (in iterations)                       |" << "\n";
-        cout << "| Help:             | -help |                                       |" << "\n";
-        cout << "_____________________________________________________________________" << "\n";
+        cout << "__________________________________________________________________________" << "\n";
+        cout << "| Iterations:       | -i    |                                             |" << "\n";
+        cout << "| Width:            | -w    |                                             |" << "\n";
+        cout << "| Heigth:           | -h    |                                             |" << "\n";
+        cout << "| Corner count:     | -c    |                                             |" << "\n";
+        cout << "| ColorMode:        | -cm   | (0=MultiColor;1=Red;2=Green;3=Blue;4=White) |" << "\n";
+        cout << "| ColorMode_s:      | -cs   | (Saturation of HSV)                         |" << "\n";
+        cout << "| ColorMode_v:      | -cv   | (Value of HSV)                              |" << "\n";
+        cout << "| Background r:     | -br   | (Red value of Background color)             |" << "\n";
+        cout << "| Background g:     | -bg   | (Green value of Background color)           |" << "\n";
+        cout << "| Background b:     | -bb   | (Blue value of Background color)            |" << "\n";
+        cout << "| Increment:        | -ic   |                                             |" << "\n";
+        cout << "| Report frequency: | -rf   | (in iterations)                             |" << "\n";
+        cout << "| Help:             | -help |                                             |" << "\n";
+        cout << "__________________________________________________________________________" << "\n";
         cout << "\n";
         cout << "License: " << "WTFPL v2" << "\n";
         return 0;
@@ -168,6 +96,7 @@ int main(int argc, char* argv[]) {
     }
     if(cmdOptionExists(argv, argv+argc, "-c"))
     {
+
         corner_count = atoi(getCmdOption(argv, argv + argc, "-c"));
     }
     if(cmdOptionExists(argv, argv+argc, "-cm"))
@@ -188,81 +117,14 @@ int main(int argc, char* argv[]) {
     }
     if(cmdOptionExists(argv, argv+argc, "-rf"))
     {
-        report_freq = atoi(getCmdOption(argv, argv + argc, "-rf"));
+        report_freq = DeScience(getCmdOption(argv, argv + argc, "-rf"));
     }
-    long resolution = width*height;
-    double kpixel = resolution / 1000;
-    double mpixel = kpixel / 1000;
-    double faktor = iterations / report_freq;
-    bool badParameters = true;
-    cout << "Settings:\n" << "-Iterations: " << Science(iterations) << "\n-Report steps: " << report_freq << " iterations ("<<100/faktor<<"%)\n-Resolution: " << width << "px X " << height << "px = " << mpixel << " MPixel\n-Corners: " << corner_count << "\n-Color increment: " << increment << "\n";
-    if(ColorMode==0) {
-        cout << "-ColorMode: " << "Multi color" << " (S: " << ColorMode_s << " V: " << ColorMode_v << ")" << "\n";
-        badParameters = false;
-    }
-    if(ColorMode==1) {
-        cout << "-ColorMode: " << "Red" << "\n";
-        badParameters = false;
-    }
-    if(ColorMode==2) {
-        cout << "-ColorMode: " << "Green" << "\n";
-        badParameters = false;
-    }
-    if(ColorMode==3) {
-        cout << "-ColorMode: " << "Blue" << "\n";
-        badParameters = false;
-    }
-    if(badParameters) {
-        cout << "BAD PARAMETERS!" << "\n";
-        return -1;
+    if(ParamOutput()) {
+        //return -1;
     }
     cout << "Computation:\n";
     generateCorners();
-    int dat[2] = {5,4};
-    dat[0] = corners[0][0];
-    dat[1] = corners[0][1];
-    dat[1] = width / 2;
-    long counter = 0;
-    long counter2 = 0;
-    for (long i = 0; i < iterations - 1; i++)
-    {
-        counter++;
-        int pkt = 0;
-        pkt = rand()%corner_count;
-        int PA = corners[pkt][0];
-        int PB = corners[pkt][1];
-        dat[0] = (dat[0] + PA) / 2;
-        dat[1] = (dat[1] + PB) / 2;
-        int a = dat[1];
-        int b = dat[0];
-        if(ColorMode==0)
-        {
-            if (sourcebuffer[(a * width + b)] + increment < 360)
-            {
-                int middelware = (int)(sourcebuffer[(a * width + b)] + increment);
-                sourcebuffer[(a * width + b)] = middelware;
-            }
-            else
-            {
-                sourcebuffer[(a * width + b)] = 360;
-            }
-        }
-        else
-        {
-            if (sourcebuffer[(a * width + b)] + increment < 256)
-            {
-                int middelware = (int)(sourcebuffer[(a * width + b)] + increment);
-                sourcebuffer[(a * width + b)] = middelware;
-            }
-        }
-        if(counter==report_freq) {
-            counter = 0;
-            counter2++;
-            double status = counter2/faktor*100;
-            cout << status << "%\n";
-        }
-    }
-    cout << "100%\n";
+    sierpinski();
     cout << "Saving...\n";
     
     BITMAPFILEHEADER bfh;
@@ -338,6 +200,9 @@ int main(int argc, char* argv[]) {
             {
                 b = (unsigned char)sourcebuffer[(y * width + x)];
             }
+            if(ColorMode==4) {
+                r = b = g = (unsigned char)sourcebuffer[(y * width + x)];
+            }
             if(sourcebuffer[(y * width + x)]==0) {
                 r = BG_R;
                 g = BG_G;
@@ -352,6 +217,161 @@ int main(int argc, char* argv[]) {
     cout << "Saved as: " << ss.str() << "\n";
     cout << "DONE\n";
     return 0;
+}
+bool ParamOutput() {
+    long resolution = width*height;
+    double kpixel = resolution / 1000;
+    double mpixel = kpixel / 1000;
+    faktor = iterations / report_freq;
+    bool badParameters = true;
+    cout << "Settings:\n" << "-Iterations: " << Science(iterations) << "\n-Report steps: " << report_freq << " iterations ("<<100/faktor<<"%)\n-Resolution: " << width << "px X " << height << "px = " << mpixel << " MPixel\n-Corners: " << corner_count << "\n-Color increment: " << increment << "\n";
+    if(ColorMode==0) {
+        cout << "-ColorMode: " << "Multi color" << " (S: " << ColorMode_s << " V: " << ColorMode_v << ")" << "\n";
+        badParameters = false;
+    }
+    if(ColorMode==1) {
+        cout << "-ColorMode: " << "Red" << "\n";
+        badParameters = false;
+    }
+    if(ColorMode==2) {
+        cout << "-ColorMode: " << "Green" << "\n";
+        badParameters = false;
+    }
+    if(ColorMode==3) {
+        cout << "-ColorMode: " << "Blue" << "\n";
+        badParameters = false;
+    }
+    if(ColorMode==4) {
+        cout << "-ColorMode: " << "White" << "\n";
+        badParameters = false;
+    }
+    if(badParameters) {
+        cout << "BAD PARAMETERS!" << "\n";
+        return true;
+    }
+}
+
+void sierpinski()
+{
+    int dat[2] = {5,4};
+    dat[0] = corners[0];
+    dat[1] = corners[1];
+    dat[1] = width / 2;
+    long counter = 0;
+    long counter2 = 0;
+    sourcebuffer.reserve(width*height);
+    for (long i = 0; i < iterations - 1; i++)
+    {
+        counter++;
+        int pkt = 0;
+        pkt = rand()%corner_count;
+        int PA = corners[pkt*2];
+        int PB = corners[pkt*2+1];
+        dat[0] = (dat[0] + PA) / 2;
+        dat[1] = (dat[1] + PB) / 2;
+        int a = dat[1];
+        int b = dat[0];
+        if(ColorMode==0)
+        {
+            //cout << i << "a\n";
+            if (sourcebuffer[(a * width + b)] + increment < 360)
+            {
+                //cout << i << "b\n";
+                int middelware = (int)(sourcebuffer[(a * width + b)] + increment);
+                sourcebuffer[(a * width + b)] = middelware;
+            }
+            else
+            {
+                sourcebuffer[(a * width + b)] = 360;
+            }
+        }
+        else
+        {
+            if (sourcebuffer[(a * width + b)] + increment < 256)
+            {
+                int middelware = (int)(sourcebuffer[(a * width + b)] + increment);
+                sourcebuffer[(a * width + b)] = middelware;
+            }
+        }
+        //cout << i << "c\n";
+        if(counter==report_freq) {
+            counter = 0;
+            counter2++;
+            double status = counter2/faktor*100;
+            cout << status << "%\n";
+        }
+    }
+    cout << "100%\n";
+}
+void generateCorners()
+{
+    vector<double> daten (corner_count*2);
+    corners.resize(corner_count*2);
+    double seite = 10;
+    double rad = seite / (2 * Sin(180 / corner_count));
+    double winkela = 360 / corner_count;//180-360/corner_count;
+    double winkelc = 180 - 2 * winkela;
+    for (int i = 0; i < corner_count; i++)
+    {
+        daten[i*2+1] = Cos(winkelc) * rad;
+        daten[i*2] = Sin(winkelc) * rad;
+        winkelc = winkelc + winkela;
+    }
+
+    double min = 0;
+    for (int i = 0; i < corner_count; i++)
+    {
+        if (min > daten[i*2])
+        {
+            min = daten[i*2];
+        }
+    }
+    double max = 0;
+    for (int i = 0; i < corner_count; i++)
+    {
+        if (max < daten[i*2+1])
+        {
+            max = daten[i*2+1];
+        }
+    }
+    for (int i = 0; i < corner_count; i++)
+    {
+        daten[i*2] = daten[i*2] - min;
+        daten[i*2+1] = (daten[i*2+1] - max);
+    }
+    double max2 = 0;
+    for (int i = 0; i < corner_count; i++)
+    {
+        if (max2 < daten[i*20])
+        {
+            max2 = daten[i*2];
+        }
+    }
+    double max1 = 0;
+    for (int i = 0; i < corner_count; i++)
+    {
+        if (max1 > daten[i*2+1])
+        {
+            max1 = daten[i*2+1];
+        }
+    }
+    max1 = (-1) * max1;
+    double scale1 = height / max1;
+    double scale2 = width / max2;
+    double scale = scale1;
+    if (scale1 < scale2)
+    {
+        scale = scale1;
+    }
+    if (scale2 < scale1)
+    {
+        scale = scale2;
+    }
+    for (int i = 0; i < corner_count; i++)
+    {
+        corners[i*2] = (int)(daten[i*2] * scale);
+        corners[i*2+1] = (int)(daten[i*2+1] * scale * (-1));
+    }
 }
 const char* Science(long value) {
     int digits = log10(value)+1;
