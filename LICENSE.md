@@ -1,13 +1,4 @@
-Dear Developer
-
-
-I'll found it great when you join developing on this software or convert it to another platform or os.
-
-If you want to use my snippets please ask me before you do.
-
-Contact: noscio@web.de
-or: jgherb@live.de
-
-Thank You!
-
-Julius Herb
+Copyright © 2015 Julius Herb <jgherb@live.de>
+This work is free. You can redistribute it and/or modify it under the
+terms of the Do What The Fuck You Want To Public License, Version 2,
+as published by Sam Hocevar. See http://www.wtfpl.net/ for more details.
