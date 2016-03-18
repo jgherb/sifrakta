@@ -2,7 +2,7 @@
 SiFrakta is a mathematical software which is able to create various fractals. 
 
 Initially it was written in C#.
-Those builds are for Windows Desktop (.NET-Framework required) and Windows RT.
+These builds are for Windows Desktop (.NET-Framework required) and Windows RT.
 
 Since October 2015 the project was restarted in C++.
 Those builds are tested for Windows Desktop (compiled with MinGW) and Linux (compiled with gcc).
